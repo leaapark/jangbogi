@@ -1,1 +1,53 @@
-.github/workflows/actualizar.yml
+# Cada d√≠a a las 6:00 de Corea descarga los precios de Danawa,
+# guarda prices.json en el repositorio y publica la app en GitHub Pages.
+name: Actualizar precios
+
+on:
+  schedule:
+    - cron: "0 21 * * *"   # 21:00 UTC = 6:00 en Corea
+  workflow_dispatch:         # bot√≥n ¬´Run workflow¬ª para lanzarlo a mano
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  actualizar:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Descargar precios
+        if: github.event_name != 'push'
+        run: python3 actualizar_precios.py
+
+      - name: Guardar prices.json
+        if: github.event_name != 'push'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add prices.json
+          git diff --cached --quiet || git commit -m "Precios del $(date -u +%F)"
+          git push
+
+      - name: Preparar la web
+        run: |
+          mkdir _site
+          cp index.html manifest.webmanifest sw.js icon-192.png icon-512.png prices.json _site/
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - id: deploy
+        uses: actions/deploy-pages@v4

@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#D7263D">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>알뜰 장보기</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Noto+Sans+KR:wght@500;700;900&display=swap">
+<style>
+/* Una sola columna, botones enormes, estilo «oferta de la tele». Tema claro fijo a propósito: máximo contraste para una persona mayor. */
+:root {
+  --bg: #F3F4F8;
+  --card: #FFFFFF;
+  --ink: #16161F;
+  --muted: #4E4E5E;
+  --line: #D9DBE5;
+  --red: #D7263D;
+  --yellow: #FFD23F;
+  --green: #0F7A41;
+  --green-soft: #E3F4EA;
+  --font-display: "Do Hyeon", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --font-body: "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  color-scheme: light;
+}
+html, body { background: var(--bg); color: var(--ink); }
+body {
+  font-family: var(--font-body);
+  font-size: 22px;
+  line-height: 1.45;
+  padding-inline: 16px;
+  padding-block: 16px 40px;
+  -webkit-tap-highlight-color: transparent;
+}
+.wrap { max-width: 560px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
+button { font: inherit; color: inherit; cursor: pointer; border: 0; }
+button:focus-visible { outline: 4px solid var(--ink); outline-offset: 3px; }
+
+header { display: flex; flex-direction: column; gap: 2px; }
+.app-name { font-family: var(--font-display); font-size: 44px; line-height: 1.1; margin: 0; }
+.today { margin: 0; color: var(--muted); font-weight: 700; }
+
+/* Oferta del día: el «momento tele» */
+.deal {
+  background: var(--red); color: #fff; border-radius: 20px;
+  padding: 20px; display: flex; flex-direction: column; gap: 10px; text-align: left;
+}
+.deal-tag {
+  align-self: flex-start; background: var(--yellow); color: var(--ink);
+  font-family: var(--font-display); font-size: 26px; padding: 2px 14px; border-radius: 999px;
+}
+.deal-row { display: flex; align-items: center; gap: 16px; }
+.deal-pic { font-size: 72px; line-height: 1; }
+.deal-name { font-size: 28px; font-weight: 900; margin: 0; }
+.deal-where { font-size: 24px; margin: 0; }
+.deal-price { font-family: var(--font-display); font-size: 60px; line-height: 1; font-variant-numeric: tabular-nums; }
+.deal-save { font-weight: 700; font-size: 22px; }
+.deal-hint { font-size: 20px; opacity: .9; }
+
+.section-title { font-size: 26px; font-weight: 900; margin: 6px 0 0; }
+
+.list { display: flex; flex-direction: column; gap: 12px; }
+.item {
+  background: var(--card); border: 2px solid var(--line); border-radius: 18px;
+  display: flex; align-items: center; gap: 16px; padding: 14px 16px; min-height: 92px; text-align: left; width: 100%;
+}
+.item:active { transform: scale(.98); }
+.item-pic { font-size: 48px; line-height: 1; flex: none; }
+.item-text { display: flex; flex-direction: column; min-width: 0; flex: 1; }
+.item-name { font-size: 26px; font-weight: 900; }
+.item-best { color: var(--green); font-weight: 700; font-size: 21px; }
+.item-arrow { font-size: 34px; color: var(--muted); flex: none; }
+
+/* Botones grandes */
+.big-btn {
+  min-height: 72px; border-radius: 16px; padding: 12px 20px;
+  font-size: 26px; font-weight: 900; display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%;
+}
+.btn-back { background: var(--ink); color: #fff; }
+.btn-voice { background: var(--yellow); color: var(--ink); }
+.btn-buy { background: var(--card); color: var(--ink); border: 3px solid var(--ink); text-decoration: none; }
+.item-pic img, .deal-pic img, .detail-pic img { display: block; width: 1em; height: 1em; object-fit: contain; background: #fff; border-radius: 12px; }
+.deal-pic img { width: 96px; height: 96px; }
+.item-pic img { width: 64px; height: 64px; }
+.detail-pic img { width: 110px; height: 110px; }
+
+/* Pantalla de detalle */
+.detail-head { display: flex; align-items: center; gap: 16px; }
+.detail-pic { font-size: 80px; line-height: 1; }
+.detail-name { font-size: 32px; font-weight: 900; margin: 0; line-height: 1.2; }
+.detail-unit { margin: 0; color: var(--muted); font-weight: 700; }
+
+.winner {
+  background: var(--green-soft); border: 3px solid var(--green); border-radius: 20px;
+  padding: 18px 20px; display: flex; flex-direction: column; gap: 4px;
+}
+.winner-label { color: var(--green); font-weight: 900; font-size: 24px; }
+.winner-store { font-size: 40px; font-weight: 900; line-height: 1.2; }
+.winner-price { font-family: var(--font-display); font-size: 58px; line-height: 1.05; font-variant-numeric: tabular-nums; }
+.winner-note { color: var(--muted); font-size: 20px; }
+
+.rank { display: flex; flex-direction: column; gap: 10px; }
+.rank-row {
+  background: var(--card); border: 2px solid var(--line); border-radius: 16px;
+  padding: 14px 16px; display: grid; grid-template-columns: 1fr auto; gap: 2px 12px; align-items: baseline;
+}
+.rank-row.first { border-color: var(--green); }
+.rank-store { font-size: 26px; font-weight: 900; }
+.promo { display: inline-block; background: var(--yellow); color: var(--ink); font-size: 18px; font-weight: 900; padding: 0 10px; border-radius: 999px; vertical-align: middle; }
+.rank-price { font-family: var(--font-display); font-size: 36px; font-variant-numeric: tabular-nums; text-align: right; }
+.rank-diff { font-size: 20px; font-weight: 700; color: var(--red); }
+.rank-row.first .rank-diff { color: var(--green); }
+.item-best .promo, .winner-store .promo { font-size: 18px; }
+.rank-size { font-size: 19px; color: var(--muted); text-align: right; }
+
+.loading { font-size: 24px; font-weight: 700; text-align: center; padding-block: 40px; margin: 0; }
+.footnote { font-size: 17px; color: var(--muted); text-align: center; margin: 8px 0 0; }
+
+@media (prefers-reduced-motion: reduce) { .item:active { transform: none; } }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+body { margin: 0; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <!-- Pantalla 1: inicio -->
+  <section id="home">
+    <div class="wrap">
+      <header>
+        <h1 class="app-name">알뜰 장보기</h1>
+        <p class="today" id="today"></p>
+      </header>
+
+      <p class="loading" id="status">가격을 불러오는 중이에요…</p>
+
+      <button class="deal" id="deal" hidden></button>
+
+      <h2 class="section-title" id="list-title" hidden>어디가 제일 쌀까요?</h2>
+      <div class="list" id="list"></div>
+
+      <p class="footnote" id="source"></p>
+    </div>
+  </section>
+
+  <!-- Pantalla 2: comparación de un producto -->
+  <section id="detail" hidden>
+    <div class="wrap">
+      <button class="big-btn btn-back" id="back">← 처음으로</button>
+
+      <div class="detail-head">
+        <div class="detail-pic" id="d-pic"></div>
+        <h2 class="detail-name" id="d-name"></h2>
+      </div>
+
+      <div class="winner">
+        <span class="winner-label">✔ 여기가 제일 싸요</span>
+        <span class="winner-store" id="w-store"></span>
+        <span class="winner-price" id="w-price"></span>
+        <span class="winner-note" id="w-note"></span>
+      </div>
+
+      <button class="big-btn btn-voice" id="voice">🔊 소리로 들려주세요</button>
+      <a class="big-btn btn-buy" id="buy" href="#" target="_blank" rel="noopener" hidden>🛒 이 가게에서 보기</a>
+
+      <h3 class="section-title">다른 가게 가격</h3>
+      <div class="rank" id="rank"></div>
+
+      <button class="big-btn btn-back" id="back2">← 처음으로</button>
+    </div>
+  </section>
+</div>
+
+<script>
+// Los precios vienen de prices.json, que genera actualizar_precios.py leyendo Danawa.
+// Se compara el precio con el envío incluido, que es lo que ella paga de verdad.
+const won = n => n.toLocaleString('ko-KR') + '원';
+const $ = id => document.getElementById(id);
+const MAX_ROWS = 6;   // tiendas que se enseñan por producto
+
+let PRODUCTS = [];
+let current = null;
+
+const saving = p => p.prices[p.prices.length - 1].total - p.prices[0].total;
+const badge = o => o.home ? ' <span class="promo">📺 홈쇼핑</span>' : '';
+const shipText = o => o.ship ? `물건값 ${won(o.price)} + 배송비 ${won(o.ship)}` : '배송비 무료';
+const picHtml = p => p.img ? `<img src="${p.img}" alt="">` : p.pic;
+
+function render(data) {
+  PRODUCTS = data.products;
+  if (!PRODUCTS.length) throw new Error('empty');
+  $('status').hidden = true;
+  const d = new Date(data.updated + 'T00:00:00');
+  $('today').textContent = `${d.getMonth() + 1}월 ${d.getDate()}일 가격 · 배송비 포함`;
+  $('source').textContent = `인터넷 쇼핑몰 가격 (${data.source} 비교) · 가게 매장 가격과 다를 수 있어요`;
+
+  // Oferta del día: el producto con más ahorro proporcional (ya viene primero).
+  const deal = PRODUCTS[0], best = deal.prices[0];
+  $('deal').innerHTML = `
+    <span class="deal-tag">오늘의 특가</span>
+    <span class="deal-row">
+      <span class="deal-pic">${picHtml(deal)}</span>
+      <span>
+        <p class="deal-name">${deal.name}</p>
+        <p class="deal-where">${best.store}${best.home ? ' · 📺 홈쇼핑' : ''}</p>
+      </span>
+    </span>
+    <span class="deal-price">${won(best.total)}</span>
+    <span class="deal-save">다른 곳보다 최대 ${won(saving(deal))} 싸요!</span>
+    <span class="deal-hint">눌러서 자세히 보기 →</span>`;
+  $('deal').onclick = () => openDetail(deal.id);
+  $('deal').hidden = false;
+  $('list-title').hidden = false;
+
+  $('list').innerHTML = PRODUCTS.slice(1).map(p => {
+    const b = p.prices[0];
+    return `<button class="item" data-id="${p.id}">
+      <span class="item-pic">${picHtml(p)}</span>
+      <span class="item-text">
+        <span class="item-name">${p.name}</span>
+        <span class="item-best">${b.store} ${won(b.total)}${badge(b)}</span>
+      </span>
+      <span class="item-arrow">›</span>
+    </button>`;
+  }).join('');
+}
+
+$('list').onclick = e => { const b = e.target.closest('.item'); if (b) openDetail(b.dataset.id); };
+
+function openDetail(id) {
+  const p = PRODUCTS.find(x => x.id === id);
+  current = p;
+  const best = p.prices[0];
+  $('d-pic').innerHTML = picHtml(p);
+  $('d-name').textContent = p.name;
+  $('w-store').innerHTML = best.store + badge(best);
+  $('w-price').textContent = won(best.total);
+  $('w-note').textContent = `${shipText(best)} · 다른 곳보다 최대 ${won(saving(p))} 싸요`;
+  $('buy').hidden = !best.link;
+  $('buy').href = best.link || '#';
+  const rows = p.prices.slice(0, MAX_ROWS);
+  const rest = p.prices.length - rows.length;
+  $('rank').innerHTML = rows.map((x, i) => `
+    <div class="rank-row${i === 0 ? ' first' : ''}">
+      <span class="rank-store">${x.store}${badge(x)}</span>
+      <span class="rank-price">${won(x.total)}</span>
+      <span class="rank-diff">${x.total === best.total ? '제일 싸요' : won(x.total - best.total) + ' 더 비싸요'}</span>
+      <span class="rank-size">${x.ship ? '배송비 ' + won(x.ship) + ' 포함' : '배송비 무료'}</span>
+    </div>`).join('') + (rest > 0 ? `<p class="footnote">더 비싼 가게 ${rest}곳은 뺐어요</p>` : '');
+  $('home').hidden = true;
+  $('detail').hidden = false;
+  window.scrollTo(0, 0);
+}
+function goHome() {
+  stopVoice();
+  $('detail').hidden = true;
+  $('home').hidden = false;
+  window.scrollTo(0, 0);
+}
+$('back').onclick = goHome;
+$('back2').onclick = goHome;
+
+// Voz: lee la recomendación como un presentador de home shopping.
+function stopVoice() { try { speechSynthesis.cancel(); } catch (e) {} }
+if (!('speechSynthesis' in window)) $('voice').hidden = true;
+$('voice').onclick = () => {
+  if (!current) return;
+  const best = current.prices[0];
+  const n = x => x.toLocaleString('ko-KR');
+  const text = `${current.name}는 ${best.store}가 제일 싸요. 배송비까지 ${n(best.total)}원이에요. ` +
+    (best.home ? '홈쇼핑 가게예요. ' : '') +
+    `다른 곳보다 최대 ${n(saving(current))}원 아낄 수 있어요.`;
+  stopVoice();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'ko-KR';
+  u.rate = 0.85;
+  speechSynthesis.speak(u);
+};
+
+fetch('prices.json', { cache: 'no-store' })
+  .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
+  .then(render)
+  .catch(() => { $('status').textContent = '가격을 불러오지 못했어요. 조금 있다가 다시 열어 주세요.'; });
+
+// Para que se pueda instalar en el móvil y abra aunque falle la conexión.
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
+</script>
+</body>
+</html>
